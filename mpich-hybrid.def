@@ -1,5 +1,6 @@
-Bootstrap: docker
-From: ubuntu:22.04
+Bootstrap: debootstrap
+OSVersion: jammy
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
 
 %files
   mpitest.c /opt
@@ -14,7 +15,20 @@ From: ubuntu:22.04
 %post
   echo "Installing required packages..."
   export DEBIAN_FRONTEND=noninteractive
-  apt-get update && apt-get install -y wget git bash gcc gfortran g++ make python3-dev
+  export LC_ALL=C.UTF-8
+  export LANG=C.UTF-8
+  export LANGUAGE=C.UTF-8
+
+  apt-get update
+  apt-get -y upgrade
+  apt-get -y install --reinstall locales
+  dpkg-reconfigure -fnoninteractive locales
+  update-locale --reset LANG="\$LANG" LC_ALL="\$LC_ALL" LANGUAGE="\$LANGUAGE"
+  apt-get install -y wget git bash gcc gfortran g++ make python3-dev
+
+  apt-get update
+  apt-get -y install apt-utils
+  apt-get install -y wget git bash gcc gfortran g++ make python3-dev
 
   # Information about the version of MPICH to use
   export MPICH_VERSION=4.1.1
@@ -27,7 +41,9 @@ From: ubuntu:22.04
   # Download
   cd /tmp/mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar xzf mpich-$MPICH_VERSION.tar.gz
   # Compile and install
-  cd /tmp/mpich/mpich-$MPICH_VERSION && ./configure --prefix=$MPICH_DIR && make -j$(nproc) install
+  cd /tmp/mpich/mpich-$MPICH_VERSION 
+  ./configure --prefix=$MPICH_DIR 
+  make -j$(nproc) install
 
   # Set env variables so we can compile our application
   export PATH=$MPICH_DIR/bin:$PATH
@@ -35,3 +51,4 @@ From: ubuntu:22.04
 
   echo "Compiling the MPI application..."
   cd /opt && mpicc -o mpitest mpitest.c
+
