@@ -4,6 +4,7 @@ MirrorURL: http://us.archive.ubuntu.com/ubuntu/
 
 %files
   mpitest.c /opt
+  mpitest_sendrecv.c /opt
 
 %environment
   # Point to MPICH binaries, libraries man pages
@@ -24,10 +25,9 @@ MirrorURL: http://us.archive.ubuntu.com/ubuntu/
   apt-get -y install --reinstall locales
   dpkg-reconfigure -fnoninteractive locales
   update-locale --reset LANG="\$LANG" LC_ALL="\$LC_ALL" LANGUAGE="\$LANGUAGE"
-  apt-get install -y wget git bash gcc gfortran g++ make python3-dev
 
-  apt-get update
   apt-get -y install apt-utils
+  apt-get -y install build-essential python3-dev
   apt-get install -y wget git bash gcc gfortran g++ make python3-dev
 
   # Information about the version of MPICH to use
@@ -49,6 +49,7 @@ MirrorURL: http://us.archive.ubuntu.com/ubuntu/
   export PATH=$MPICH_DIR/bin:$PATH
   export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH
 
-  echo "Compiling the MPI application..."
-  cd /opt && mpicc -o mpitest mpitest.c
-
+  echo "Compiling the MPI applications..."
+  cd /opt 
+  mpicc -o mpitest           mpitest.c
+  mpicc -o mpitest_sendrecv  mpitest_sendrecv.c
