@@ -16,9 +16,6 @@ APPTAINER_OPTS="\
   --home $PWD \
 "
 
-# suppress PMIX ERROR: "ERROR in file gds_ds12_lock_pthread.c"
-#export PMIX_MCA_gds=^ds12
-
 if [ -r "/opt/software/slurm/lib/libpmi2.so" ] ; then
   I_MPI_PMI_LIBRARY="/opt/software/slurm/lib/libpmi2.so"
 elif [ -r "/opt/software/slurm/lib64/libpmi2.so" ] ; then
@@ -26,7 +23,7 @@ elif [ -r "/opt/software/slurm/lib64/libpmi2.so" ] ; then
 fi
 export I_MPI_PMI_LIBRARY
 
-for CONTAINER in mpich-hybrid.sif #mpich-hybrid-slurm.sif ; 
+for CONTAINER in mpich-hybrid.sif ; 
 do
   for MPIRUN in mpirun mpiexec "srun --mpi=pmi2" ; do
     for TEST in /opt/mpitest /opt/mpitest_sendrecv ; do
