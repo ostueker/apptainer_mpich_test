@@ -3,9 +3,13 @@
 This is an Apptainer container with MPICH based on
 https://apptainer.org/docs/user/1.2/mpi.html
 
-The container itself should be started with `mpirun` or `srun`
+The container itself should be started with `srun --mpi=pmi2`
 so that multiple copies of the container can run on several
 different nodes on an HPC cluster
+
+Note that using `mpirun` or `mpiexec` as an MPI starter
+nor compiling the MPICH inside the container with UCX or slurm options 
+were successful.
 
 ## Building MPICH container from scratch (bootstrapped)
 
