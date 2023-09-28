@@ -25,7 +25,7 @@ sudo apptainer build --fix-perms mpich-hybrid-slurm.sif mpich-hybrid-slurm.def
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem-per-cpu=1000M
 
-module load intelmpi
+module load StdEnv/2020 intelmpi
 module load apptainer
 #CONTAINER="mpich-hybrid.sif"
 CONTAINER="mpich-hybrid-slurm.sif"
@@ -48,13 +48,13 @@ APPTAINER_OPTS="\
 
 for TEST in /opt/mpitest /opt/mpitest_sendrecv ; do
     echo "running:"
-    echo "  ${MPIRUN} apptainer exec \\"
+    echo "  ${MPIRUN} apptainer --silent exec \\"
     echo "    ${APPTAINER_OPTS} \\"
     echo "    ${CONTAINER} $TEST"
     echo ""
     echo "========================================="
     echo ""
-    time  ${MPIRUN}  apptainer  exec \
+    time  ${MPIRUN}  apptainer --silent exec \
             ${APPTAINER_OPTS} \
             ${CONTAINER}  $TEST
     echo ""

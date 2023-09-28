@@ -4,7 +4,7 @@
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem-per-cpu=1000M
 
-module load intelmpi
+module load StdEnv/2020 intelmpi
 module load apptainer
 
 # create $CACHE_DIR on all participating nodes
@@ -26,15 +26,15 @@ export I_MPI_PMI_LIBRARY
 for CONTAINER in mpich-hybrid.sif ; 
 do
   for MPIRUN in mpirun mpiexec "srun --mpi=pmi2" ; do
-    for TEST in /opt/mpitest /opt/mpitest_sendrecv ; do
+    for TEST in /opt/mpitest /opt/mpitest_sendrecv "/opt/reduce_stddev 100000000" ; do
       echo "running:"
-      echo "  ${MPIRUN} apptainer exec \\"
+      echo "  ${MPIRUN} apptainer --silent exec \\"
       echo "    ${APPTAINER_OPTS} \\"
       echo "    ${CONTAINER} $TEST"
       echo ""
       echo "========================================="
       echo ""
-      time  ${MPIRUN}  apptainer  exec \
+      time  ${MPIRUN}  apptainer --silent exec \
             ${APPTAINER_OPTS} \
             ${CONTAINER}  $TEST
       echo ""
