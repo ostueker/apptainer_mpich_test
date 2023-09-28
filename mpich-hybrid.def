@@ -29,7 +29,7 @@ MirrorURL: http://us.archive.ubuntu.com/ubuntu/
 
   apt-get -y install apt-utils
   apt-get -y install build-essential python3-dev
-  apt-get install -y wget git bash gcc gfortran g++ make python3-dev
+  apt-get -y install wget git bash gcc gfortran g++ make
 
   # Information about the version of MPICH to use
   export MPICH_VERSION=4.1.1

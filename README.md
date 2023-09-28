@@ -11,10 +11,7 @@ different nodes on an HPC cluster
 
 ```bash
 sudo apptainer build --fix-perms mpich-hybrid.sif mpich-hybrid.def
-
-sudo apptainer build --fix-perms mpich-hybrid-slurm.sif mpich-hybrid-slurm.def
 ```
-
 
 ## Slurm Jobscript to run the test-cases inside
 
@@ -25,10 +22,9 @@ sudo apptainer build --fix-perms mpich-hybrid-slurm.sif mpich-hybrid-slurm.def
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem-per-cpu=1000M
 
-module load StdEnv/2020 intelmpi
-module load apptainer
-#CONTAINER="mpich-hybrid.sif"
-CONTAINER="mpich-hybrid-slurm.sif"
+module purge
+module load StdEnv/2020 intelmpi apptainer
+CONTAINER="mpich-hybrid.sif"
 
 # create $CACHE_DIR on all participating nodes
 CACHE_DIR="${SLURM_TMPDIR}/.cache"
@@ -46,7 +42,7 @@ APPTAINER_OPTS="\
   --bind="${SLURM_TMPDIR}:/tmp,${CACHE_DIR}:/fd/.cache" \
   --home $PWD "
 
-for TEST in /opt/mpitest /opt/mpitest_sendrecv ; do
+for TEST in /opt/mpitest /opt/mpitest_sendrecv "/opt/reduce_stddev 100000000"; do
     echo "running:"
     echo "  ${MPIRUN} apptainer --silent exec \\"
     echo "    ${APPTAINER_OPTS} \\"

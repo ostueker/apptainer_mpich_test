@@ -4,8 +4,8 @@
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem-per-cpu=1000M
 
-module load StdEnv/2020 intelmpi
-module load apptainer
+module purge
+module load StdEnv/2020 intelmpi apptainer
 
 # create $CACHE_DIR on all participating nodes
 CACHE_DIR="${SLURM_TMPDIR}/.cache"
@@ -23,7 +23,7 @@ elif [ -r "/opt/software/slurm/lib64/libpmi2.so" ] ; then
 fi
 export I_MPI_PMI_LIBRARY
 
-for CONTAINER in mpich-hybrid.sif ; 
+for CONTAINER in mpich-hybrid.sif ;
 do
   for MPIRUN in mpirun mpiexec "srun --mpi=pmi2" ; do
     for TEST in /opt/mpitest /opt/mpitest_sendrecv "/opt/reduce_stddev 100000000" ; do
